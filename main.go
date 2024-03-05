@@ -35,5 +35,6 @@ func main() {
 	r.GET("/home", AuthMiddleWare(), func(c *gin.Context) {
 		c.JSON(200, gin.H{"data": "home"})
 	})
+	//trestestes
 	r.Run(":8000")
 }
