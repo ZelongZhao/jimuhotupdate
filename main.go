@@ -1,40 +1,47 @@
 package main
 
 import (
+	"errors"
+	"git.vfeda.com/vfeda/JiMuHotUpdate/Middlewares"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func AuthMiddleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// 获取客户端cookie并校验
-		if cookie, err := c.Cookie("abc"); err == nil {
-			if cookie == "123" {
-				c.Next()
-				return
-			}
-		}
-		// 返回错误
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "err"})
-		// 若验证不通过，不再调用后续的函数处理
-		c.Abort()
-		return
+type Profile struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func getProfile(user string) (Profile, error) {
+	if user == "leoric" {
+		return Profile{
+			Username: "leoric",
+			Password: "123",
+		}, nil
 	}
+	return Profile{}, errors.New("user not found")
+}
+
+func AuthLoginHandler(c *gin.Context) {
+	var user Profile
+	if err := c.ShouldBind(user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	if _, err := getProfile(user.Username); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	tokenString, err := Middlewares.GenJwtToken(user.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 }
 
 func main() {
 	// 1.创建路由
 	r := gin.Default()
-	r.GET("/login", func(c *gin.Context) {
-		// 设置cookie
-		c.SetCookie("abc", "123", 60, "/",
-			"localhost", false, true)
-		// 返回信息
-		c.String(200, "Login success!")
-	})
-	r.GET("/home", AuthMiddleWare(), func(c *gin.Context) {
-		c.JSON(200, gin.H{"data": "home"})
-	})
-	//trestestes
-	r.Run(":8000")
+
+	r.Run(":8080")
 }
