@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"git.vfeda.com/vfeda/JiMuHotUpdate/Middlewares"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -23,25 +24,52 @@ func getProfile(user string) (Profile, error) {
 }
 
 func AuthLoginHandler(c *gin.Context) {
-	var user Profile
-	if err := c.ShouldBind(user); err != nil {
+	user := Profile{}
+	if err := c.ShouldBind(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if _, err := getProfile(user.Username); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	tokenString, err := Middlewares.GenJwtToken(user.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+	return
+}
+
+var i = 1
+
+func helloHandler(c *gin.Context) {
+	i++
+	if i%10 == 0 {
+
+		fmt.Printf("%d\n", i)
+	}
+	c.JSON(http.StatusOK, gin.H{"hello": "world"})
 }
 
 func main() {
 	// 1.创建路由
 	r := gin.Default()
+
+	authG := r.Group("/auth")
+	{
+		authG.POST("/login", AuthLoginHandler)
+	}
+
+	v1 := r.Group("/v1")
+	v1.Use(Middlewares.JWTAuthMiddleware(), Middlewares.RateLimitMiddleware())
+	{
+
+		v1.GET("/hello", helloHandler)
+	}
 
 	r.Run(":8080")
 }

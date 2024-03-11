@@ -1,7 +1,12 @@
 package Middlewares
 
 import (
+	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"github.com/juju/ratelimit"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -16,10 +21,6 @@ type TestClaims struct {
 	Username string `json:"username"`
 }
 
-func (t *TestClaims) Vaild() {
-	return
-}
-
 func GenJwtToken(username string) (string, error) {
 	claims := TestClaims{
 		jwt.StandardClaims{
@@ -32,27 +33,58 @@ func GenJwtToken(username string) (string, error) {
 	return token.SignedString(jwtSecret)
 }
 
-//func ParseToken(tokenString string) (*MyClaims, error) {
-//	// 解析token
-//	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (i interface{}, err error) {
-//		return MySecret, nil
-//	})
-//	if err != nil {
-//		return nil, err
-//	}
-//	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid { // 校验token
-//		return claims, nil
-//	}
-//	return nil, errors.New("invalid token")
-//}
-
 func ParseJwtToken(jwtToken string) (*TestClaims, error) {
-	//token, err := jwt.ParseWithClaims(jwtToken, &TestClaims{}, func(token *jwt.Token) (interface{}, error) {
-	//	return jwtSecret, nil
-	//})
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//return nil, err
+	token, err := jwt.ParseWithClaims(jwtToken, &TestClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if claims, ok := token.Claims.(*TestClaims); ok && token.Valid {
+		return claims, err
+	}
+	return nil, errors.New("invalid token")
+}
+
+func JWTAuthMiddleware() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		authHeader := c.Request.Header.Get("authorization")
+		if authHeader == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": http.StatusUnauthorized,
+			})
+			c.Abort()
+			return
+		}
+		parts := strings.Split(authHeader, ".")
+		if len(parts) != 3 {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": http.StatusUnauthorized,
+			})
+			c.Abort()
+			return
+		}
+		mc, err := ParseJwtToken(authHeader)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": http.StatusUnauthorized,
+			})
+			c.Abort()
+			return
+		}
+		c.Set("username", mc.Username)
+		c.Next()
+	}
+}
+
+func RateLimitMiddleware() func(c *gin.Context) {
+	bucket := ratelimit.NewBucketWithQuantum(time.Minute, 10, 1)
+	return func(c *gin.Context) {
+		if bucket.TakeAvailable(1) == 0 {
+			c.JSON(http.StatusForbidden, gin.H{"code": http.StatusForbidden})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
 }
