@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"git.vfeda.com/vfeda/JiMuHotUpdate/Middlewares"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -44,14 +43,7 @@ func AuthLoginHandler(c *gin.Context) {
 	return
 }
 
-var i = 1
-
 func helloHandler(c *gin.Context) {
-	i++
-	if i%10 == 0 {
-
-		fmt.Printf("%d\n", i)
-	}
 	c.JSON(http.StatusOK, gin.H{"hello": "world"})
 }
 
