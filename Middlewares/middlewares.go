@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	jwtSecret = []byte("secret")
+	JwtSecret = []byte("secret")
 )
 
 const TokenExpireDuration = time.Hour * 24
@@ -30,12 +30,12 @@ func GenJwtToken(username string) (string, error) {
 		username,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtSecret)
+	return token.SignedString(JwtSecret)
 }
 
 func ParseJwtToken(jwtToken string) (*TestClaims, error) {
 	token, err := jwt.ParseWithClaims(jwtToken, &TestClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
+		return JwtSecret, nil
 	})
 	if err != nil {
 		return nil, err
