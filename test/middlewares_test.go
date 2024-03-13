@@ -2,6 +2,10 @@ package main
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -40,8 +44,6 @@ func TestGenJwtToken(t *testing.T) {
 }
 
 func TestParseJwtToken_ValidToken(t *testing.T) {
-	//jwtToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTAzMTA0MjAsImp0aSI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3MTAyMTMyMjAsImlzcyI6Imlzc3VlciIsInVzZXJuYW1lIjoiIn0.wUlkNvbaLFexnYzyekDx7A2GE4OKlj_tmEmbn1f18Pk"
-
 	expectedClaims := &Middlewares.TestClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(Middlewares.TokenExpireDuration).Unix(),
@@ -61,6 +63,7 @@ func TestParseJwtToken_ValidToken(t *testing.T) {
 
 	if claims == nil {
 		t.Error("Expected claims not to be nil, but it was")
+		return
 	}
 
 	if claims.ExpiresAt != expectedClaims.ExpiresAt {
@@ -78,4 +81,43 @@ func TestParseJwtToken_ValidToken(t *testing.T) {
 	if claims.Issuer != expectedClaims.Issuer {
 		t.Errorf("Expected issuer %s, but got %s", expectedClaims.Issuer, claims.Issuer)
 	}
+}
+
+func TestParseJwtToken_InvalidToken(t *testing.T) {
+	jwtToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJCustomFieldIjoiVmFsaWRJZCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5d"
+
+	_, err := Middlewares.ParseJwtToken(jwtToken)
+
+	if err == nil {
+		t.Error("Expected error, but got nil")
+	}
+}
+
+func TestJWTAuthMiddleware(t *testing.T) {
+	router := gin.Default()
+	router.Use(Middlewares.JWTAuthMiddleware())
+
+	// Test case 1: No authorization header
+	req, _ := http.NewRequest("GET", "/", nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
+	assert.Equal(t, "{\"code\":401}", w.Body.String())
+
+	// Test case 2: Invalid authorization header
+	req, _ = http.NewRequest("GET", "/", nil)
+	req.Header.Set("authorization", "invalid")
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
+	assert.Equal(t, "{\"code\":401}", w.Body.String())
+
+	// Test case 3: Valid authorization header
+	token := "Bearer valid.token.here"
+	req, _ = http.NewRequest("GET", "/", nil)
+	req.Header.Set("authorization", token)
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, gin.H{"username": "testuser"}, w.Body.String())
 }
