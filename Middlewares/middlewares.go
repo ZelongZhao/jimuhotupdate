@@ -39,11 +39,11 @@ func ParseJwtToken(jwtToken string) (*TestClaims, error) {
 	})
 	if err != nil {
 		return nil, err
+	} else if claims, ok := token.Claims.(*TestClaims); ok {
+		return claims, nil
+	} else {
+		return nil, errors.New("unknown claims type")
 	}
-	if claims, ok := token.Claims.(*TestClaims); ok && token.Valid {
-		return claims, err
-	}
-	return nil, errors.New("invalid token")
 }
 
 func JWTAuthMiddleware() func(c *gin.Context) {
@@ -76,7 +76,6 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		c.Next()
 	}
 }
-
 func RateLimitMiddleware() func(c *gin.Context) {
 	bucket := ratelimit.NewBucketWithQuantum(time.Minute, 10, 1)
 	return func(c *gin.Context) {
