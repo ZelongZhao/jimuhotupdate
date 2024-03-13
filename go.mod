@@ -1,12 +1,12 @@
 module git.vfeda.com/vfeda/JiMuHotUpdate
 
-go 1.22
+go 1.21
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
 	github.com/juju/ratelimit v1.0.2
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.9.0
 )
 
 require (

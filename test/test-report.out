@@ -1,0 +1,38 @@
+{"Time":"2024-03-13T22:40:58.842114+08:00","Action":"start","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test"}
+{"Time":"2024-03-13T22:40:58.842225+08:00","Action":"run","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestGenJwtToken"}
+{"Time":"2024-03-13T22:40:58.842238+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestGenJwtToken","Output":"=== RUN   TestGenJwtToken\n"}
+{"Time":"2024-03-13T22:40:58.842249+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestGenJwtToken","Output":"--- PASS: TestGenJwtToken (0.00s)\n"}
+{"Time":"2024-03-13T22:40:58.842258+08:00","Action":"pass","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestGenJwtToken","Elapsed":0}
+{"Time":"2024-03-13T22:40:58.842269+08:00","Action":"run","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_ValidToken"}
+{"Time":"2024-03-13T22:40:58.842275+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_ValidToken","Output":"=== RUN   TestParseJwtToken_ValidToken\n"}
+{"Time":"2024-03-13T22:40:58.842284+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_ValidToken","Output":"--- PASS: TestParseJwtToken_ValidToken (0.00s)\n"}
+{"Time":"2024-03-13T22:40:58.842293+08:00","Action":"pass","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_ValidToken","Elapsed":0}
+{"Time":"2024-03-13T22:40:58.842302+08:00","Action":"run","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_InvalidToken"}
+{"Time":"2024-03-13T22:40:58.842307+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_InvalidToken","Output":"=== RUN   TestParseJwtToken_InvalidToken\n"}
+{"Time":"2024-03-13T22:40:58.842312+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_InvalidToken","Output":"--- PASS: TestParseJwtToken_InvalidToken (0.00s)\n"}
+{"Time":"2024-03-13T22:40:58.842317+08:00","Action":"pass","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestParseJwtToken_InvalidToken","Elapsed":0}
+{"Time":"2024-03-13T22:40:58.842322+08:00","Action":"run","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware"}
+{"Time":"2024-03-13T22:40:58.842326+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"=== RUN   TestJWTAuthMiddleware\n"}
+{"Time":"2024-03-13T22:40:58.842331+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.\n"}
+{"Time":"2024-03-13T22:40:58.842337+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"\n"}
+{"Time":"2024-03-13T22:40:58.842344+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"[GIN-debug] [WARNING] Running in \"debug\" mode. Switch to \"release\" mode in production.\n"}
+{"Time":"2024-03-13T22:40:58.842349+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":" - using env:\texport GIN_MODE=release\n"}
+{"Time":"2024-03-13T22:40:58.842354+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":" - using code:\tgin.SetMode(gin.ReleaseMode)\n"}
+{"Time":"2024-03-13T22:40:58.842358+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"\n"}
+{"Time":"2024-03-13T22:40:58.842363+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"[GIN] 2024/03/13 - 22:39:20 | 401 |      45.625µs |                 | GET      \"/\"\n"}
+{"Time":"2024-03-13T22:40:58.842368+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"[GIN] 2024/03/13 - 22:39:20 | 401 |        2.75µs |                 | GET      \"/\"\n"}
+{"Time":"2024-03-13T22:40:58.842382+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"[GIN] 2024/03/13 - 22:39:20 | 404 |       7.209µs |                 | GET      \"/\"\n"}
+{"Time":"2024-03-13T22:40:58.842388+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Output":"--- PASS: TestJWTAuthMiddleware (0.00s)\n"}
+{"Time":"2024-03-13T22:40:58.842392+08:00","Action":"pass","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestJWTAuthMiddleware","Elapsed":0}
+{"Time":"2024-03-13T22:40:58.842396+08:00","Action":"run","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware"}
+{"Time":"2024-03-13T22:40:58.8424+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":"=== RUN   TestRateLimitMiddleware\n"}
+{"Time":"2024-03-13T22:40:58.842403+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":"[GIN-debug] [WARNING] Running in \"debug\" mode. Switch to \"release\" mode in production.\n"}
+{"Time":"2024-03-13T22:40:58.842407+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":" - using env:\texport GIN_MODE=release\n"}
+{"Time":"2024-03-13T22:40:58.842411+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":" - using code:\tgin.SetMode(gin.ReleaseMode)\n"}
+{"Time":"2024-03-13T22:40:58.842414+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":"\n"}
+{"Time":"2024-03-13T22:40:58.842417+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":"[GIN-debug] GET    /test                     --\u003e git.vfeda.com/vfeda/JiMuHotUpdate/test.TestRateLimitMiddleware.func1 (2 handlers)\n"}
+{"Time":"2024-03-13T22:40:58.842422+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Output":"--- PASS: TestRateLimitMiddleware (0.00s)\n"}
+{"Time":"2024-03-13T22:40:58.842425+08:00","Action":"pass","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Test":"TestRateLimitMiddleware","Elapsed":0}
+{"Time":"2024-03-13T22:40:58.842429+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Output":"PASS\n"}
+{"Time":"2024-03-13T22:40:58.842432+08:00","Action":"output","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Output":"ok  \tgit.vfeda.com/vfeda/JiMuHotUpdate/test\t(cached)\n"}
+{"Time":"2024-03-13T22:40:58.842438+08:00","Action":"pass","Package":"git.vfeda.com/vfeda/JiMuHotUpdate/test","Elapsed":0}
