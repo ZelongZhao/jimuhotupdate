@@ -1,67 +1,34 @@
 package main
 
 import (
-	"errors"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/Middlewares"
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"git.vfeda.com/vfeda/JiMuHotUpdate/router"
 )
 
-type Profile struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-func getProfile(user string) (Profile, error) {
-	if user == "leoric" {
-		return Profile{
-			Username: "leoric",
-			Password: "123",
-		}, nil
-	}
-	return Profile{}, errors.New("user not found")
-}
-
-func AuthLoginHandler(c *gin.Context) {
-	user := Profile{}
-	if err := c.ShouldBind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if _, err := getProfile(user.Username); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	tokenString, err := Middlewares.GenJwtToken(user.Username)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
-	return
-}
-
-func helloHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"hello": "world"})
-}
-
 func main() {
-	// 1.创建路由
-	r := gin.Default()
 
-	authG := r.Group("/auth")
-	{
-		authG.POST("/login", AuthLoginHandler)
-	}
+	//db, err := gorm.Open(mysql.New(mysql.Config{
+	//	DSN:                       "root:123Zhaozelong@tcp(139.159.220.124:3306)/test_gorm?charset=utf8&parseTime=True&loc=Local",
+	//	DefaultStringSize:         256,   // string 类型字段的默认长度
+	//	DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
+	//	DontSupportRenameIndex:    true,  // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
+	//	DontSupportRenameColumn:   true,  // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
+	//	SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
+	//}), &gorm.Config{})
+	//
+	//if err != nil {
+	//	panic("failed to connect database")
+	//}
+	//
+	//a, _ := gormadapter.NewAdapterByDB(db)
+	//e, _ := casbin.NewEnforcer("conf/rbac_model.conf", a)
+	//
+	//e.LoadPolicy()
+	//
+	//e.Enforce("alice", "data1", "read")
+	//
+	//e.SavePolicy()
 
-	v1 := r.Group("/v1")
-	v1.Use(Middlewares.JWTAuthMiddleware(), Middlewares.RateLimitMiddleware())
-	{
-
-		v1.GET("/hello", helloHandler)
-	}
+	r := router.InitRouter()
 
 	r.Run(":8080")
 }
