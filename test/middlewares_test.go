@@ -8,29 +8,27 @@ import (
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"git.vfeda.com/vfeda/JiMuHotUpdate/Middlewares"
 )
 
 func TestGenJwtToken(t *testing.T) {
 	username := "testuser"
-	expectedExpire := time.Now().Add(Middlewares.TokenExpireDuration).Unix()
+	expectedExpire := time.Now().Add(middlewares.TokenExpireDuration).Unix()
 	expectedIssuer := "leoric"
 	expectedUsername := "testuser"
 
-	token, err := Middlewares.GenJwtToken(username)
+	token, err := middlewares.GenJwtToken(username)
 	if err != nil {
 		t.Errorf("Failed to generate JWT token: %v", err)
 	}
 
-	parsedToken, err := jwt.ParseWithClaims(token, &Middlewares.TestClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return Middlewares.JwtSecret, nil
+	parsedToken, err := jwt.ParseWithClaims(token, &middlewares.TestClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return middlewares.JwtSecret, nil
 	})
 	if err != nil {
 		t.Errorf("Failed to parse JWT token: %v", err)
 	}
 
-	claims := parsedToken.Claims.(*Middlewares.TestClaims)
+	claims := parsedToken.Claims.(*middlewares.TestClaims)
 
 	if claims.ExpiresAt != expectedExpire {
 		t.Errorf("Expected expiration time %v, but got %v", expectedExpire, claims.ExpiresAt)
@@ -44,18 +42,18 @@ func TestGenJwtToken(t *testing.T) {
 }
 
 func TestParseJwtToken_ValidToken(t *testing.T) {
-	expectedClaims := &Middlewares.TestClaims{
+	expectedClaims := &middlewares.TestClaims{
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(Middlewares.TokenExpireDuration).Unix(),
+			ExpiresAt: time.Now().Add(middlewares.TokenExpireDuration).Unix(),
 			IssuedAt:  time.Now().Add(-time.Hour * 3).Unix(),
 			Id:        "1234567890",
 			Issuer:    "issuer",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, expectedClaims)
-	jwtToken, _ := token.SignedString(Middlewares.JwtSecret)
+	jwtToken, _ := token.SignedString(middlewares.JwtSecret)
 
-	claims, err := Middlewares.ParseJwtToken(jwtToken)
+	claims, err := middlewares.ParseJwtToken(jwtToken)
 
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
@@ -86,7 +84,7 @@ func TestParseJwtToken_ValidToken(t *testing.T) {
 func TestParseJwtToken_InvalidToken(t *testing.T) {
 	jwtToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJCustomFieldIjoiVmFsaWRJZCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5d"
 
-	_, err := Middlewares.ParseJwtToken(jwtToken)
+	_, err := middlewares.ParseJwtToken(jwtToken)
 
 	if err == nil {
 		t.Error("Expected error, but got nil")
@@ -95,7 +93,7 @@ func TestParseJwtToken_InvalidToken(t *testing.T) {
 
 func TestJWTAuthMiddleware(t *testing.T) {
 	router := gin.Default()
-	router.Use(Middlewares.JWTAuthMiddleware())
+	router.Use(middlewares.JWTAuthMiddleware())
 
 	// Test case 1: No authorization header
 	req, _ := http.NewRequest("GET", "/", nil)
@@ -113,7 +111,7 @@ func TestJWTAuthMiddleware(t *testing.T) {
 	assert.Equal(t, "{\"code\":401}", w.Body.String())
 
 	// Test case 3: Valid authorization header
-	token, _ := Middlewares.GenJwtToken("testuser")
+	token, _ := middlewares.GenJwtToken("testuser")
 	req, _ = http.NewRequest("GET", "/", nil)
 	req.Header.Set("authorization", token)
 	w = httptest.NewRecorder()
@@ -123,7 +121,7 @@ func TestJWTAuthMiddleware(t *testing.T) {
 }
 
 func TestRateLimitMiddleware(t *testing.T) {
-	rateLimitMiddleware := Middlewares.RateLimitMiddleware()
+	rateLimitMiddleware := middlewares.RateLimitMiddleware()
 
 	// 创建一个gin引擎实例
 	router := gin.New()
