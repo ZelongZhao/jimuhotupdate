@@ -1,13 +1,28 @@
 package middlewares
 
 import (
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/auth"
+	"errors"
+	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/usecase"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/juju/ratelimit"
 	"net/http"
 	"strings"
 	"time"
 )
+
+func ParseJwtToken(jwtToken string) (*usecase.TestClaims, error) {
+	token, err := jwt.ParseWithClaims(jwtToken, &usecase.TestClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return usecase.JwtSecret, nil
+	})
+	if err != nil {
+		return nil, err
+	} else if claims, ok := token.Claims.(*usecase.TestClaims); ok {
+		return claims, nil
+	} else {
+		return nil, errors.New("unknown claims type")
+	}
+}
 
 func JWTAuthMiddleware() func(c *gin.Context) {
 	return func(c *gin.Context) {
@@ -27,7 +42,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		mc, err := auth.ParseJwtToken(authHeader)
+		mc, err := ParseJwtToken(authHeader)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": http.StatusUnauthorized,

@@ -19,6 +19,7 @@ type IUserUseCase interface {
 	CreateUser(user *User) error
 	UpdateUser(user *User) error
 	DelUser(user string) error
+	AuthLogin(user *User) (string, error)
 }
 
 type IUserRepo interface {

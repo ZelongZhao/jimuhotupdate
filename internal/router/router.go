@@ -11,14 +11,15 @@ func InitRouter() *gin.Engine {
 
 	authG := r.Group("/auth")
 	{
-		authG.POST("/login", v1.AuthLoginHandler)
+
+		authG.POST("/login", AuthLoginHandler)
 	}
 
 	g1 := r.Group("/v1")
 	g1.Use(middlewares.JWTAuthMiddleware(), middlewares.RateLimitMiddleware())
 	{
 
-		g1.GET("/hello", v1.AuthLoginHandler)
+		g1.GET("/hello", v1.HelloHandler)
 	}
 	return r
 }
