@@ -4,8 +4,6 @@ import (
 	"gorm.io/gorm"
 )
 
-//var db = data.JimuDb
-
 type User struct {
 	gorm.Model
 	Username string `json:"username"`
