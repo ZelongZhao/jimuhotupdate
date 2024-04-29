@@ -9,7 +9,7 @@ import (
 func main() {
 	s,_ := NewServices()
 
-	r := router.InitRouter(*s.u)
+	r := router.NewRouter()
 
 	r.Run(":8080")
 }

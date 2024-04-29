@@ -3,21 +3,28 @@ package router
 import (
 	"git.vfeda.com/vfeda/JiMuHotUpdate/api/v1"
 	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/pkg/middlewares"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/server/service"
 	"github.com/gin-gonic/gin"
+	"github.com/google/wire"
 )
 
-func InitRouter(s service.UserService) *gin.Engine {
+var Set = wire.NewSet(
+	NewRouter,
+)
+
+func NewRouter(
+	
+) *gin.Engine{
 	r := gin.Default()
+
+	r.Use(middlewares.RateLimitMiddleware())
 
 	authG := r.Group("/auth")
 	{
-
-		authG.POST("/login", s.AuthLoginHandler)
+		authG.POST("/login", )
 	}
 
 	g1 := r.Group("/v1")
-	g1.Use(middlewares.JWTAuthMiddleware(), middlewares.RateLimitMiddleware())
+	g1.Use(middlewares.JWTAuthMiddleware())
 	{
 
 		g1.GET("/hello", v1.HelloHandler)
