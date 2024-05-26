@@ -1,9 +1,9 @@
 package service
 
 import (
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/domain"
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"context"
+	v1 "git.vfeda.com/vfedabackendteam/jimuhotupdate/api/hotUpdate/v1"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/domain"
 )
 
 type UserService struct {
@@ -14,18 +14,29 @@ func NewUserService(usecase domain.IUserUseCase) *UserService {
 	return &UserService{usecase: usecase}
 }
 
-func (u *UserService) AuthLoginHandler(c *gin.Context) {
+//func (u *UserService) AuthLoginHandler(c *gin.Context) {
+//	user := domain.User{}
+//	if err := c.ShouldBind(&user); err != nil {
+//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+//		return
+//	}
+//
+//	tokenString, err := u.usecase.AuthLogin(&user)
+//	if err != nil {
+//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+//		return
+//	}
+//
+//	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+//}
+
+func (u *UserService) Login(ctx context.Context, loginRequest *v1.LoginRequest) (*v1.LoginResponse, error) {
 	user := domain.User{}
-	if err := c.ShouldBind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
+	user.Username = loginRequest.Username
+	user.Password = loginRequest.Password
 	tokenString, err := u.usecase.AuthLogin(&user)
-	if(err != nil){
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	if err != nil {
+		return nil, err
 	}
-
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+	return &v1.LoginResponse{Token: tokenString}, nil
 }

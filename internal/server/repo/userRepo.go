@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/domain"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/domain"
 	"gorm.io/gorm"
 )
 
