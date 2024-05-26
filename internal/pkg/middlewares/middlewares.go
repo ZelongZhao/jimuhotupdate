@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"errors"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/domain"
 	"github.com/dgrijalva/jwt-go"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/domain"
 	"github.com/gin-gonic/gin"
 	"github.com/juju/ratelimit"
 	"net/http"

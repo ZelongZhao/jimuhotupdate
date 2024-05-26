@@ -7,10 +7,10 @@
 package main
 
 import (
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/pkg/data"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/server/repo"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/server/service"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/server/usecase"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/pkg/data"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/server/repo"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/server/service"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/server/usecase"
 )
 
 // Injectors from wire.go:

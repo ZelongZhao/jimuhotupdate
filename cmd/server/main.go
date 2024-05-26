@@ -1,15 +1,20 @@
 package main
 
 import (
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/pkg/router"
+	"github.com/gin-gonic/gin"
 )
 
-
-
 func main() {
-	s,_ := NewServices()
+	//s,_ := NewServices()
 
-	r := router.NewRouter()
+	//r := router.NewRouter()
 
-	r.Run(":8080")
+	r := gin.Default()
+
+	s, _ := NewServices()
+
+	s.Register(r)
+
+	//r.Run(":8080")
+
 }

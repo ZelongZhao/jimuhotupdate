@@ -1,9 +1,11 @@
 package main
 
 import (
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/pkg/data"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/server"
-	"git.vfeda.com/vfeda/JiMuHotUpdate/internal/server/service"
+	v1 "git.vfeda.com/vfedabackendteam/jimuhotupdate/api/hotUpdate/v1"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/pkg/data"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/server"
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/server/service"
+	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 )
 
@@ -14,4 +16,8 @@ var set = wire.NewSet(
 
 type services struct {
 	u *service.UserService
+}
+
+func (s *services) Register(r gin.IRouter) {
+	v1.RegisterIMLoginServiceHTTPServer(r, s.u)
 }
