@@ -8,6 +8,7 @@ import (
 
 type UserService struct {
 	usecase domain.IUserUseCase
+	v1.IMLoginServiceServer
 }
 
 func NewUserService(usecase domain.IUserUseCase) *UserService {
