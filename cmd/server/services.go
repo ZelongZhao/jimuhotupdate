@@ -20,7 +20,7 @@ type services struct {
 	u *service.UserService
 }
 
-func (s *services) Register(grpcServer *grpc.Server, grpcLocalClient *grpc.ClientConn, restfulMux *runtime.ServeMux) {
+func (s *services) Register(grpcServer *grpc.Server, grpcLocalClient *grpc.ClientConn, restfulMux *runtime.ServeMux, authMux *runtime.ServeMux) {
 	v1.RegisterIMLoginServiceServer(grpcServer, s.u)
-	_ = v1.RegisterIMLoginServiceHandler(context.Background(), restfulMux, grpcLocalClient)
+	_ = v1.RegisterIMLoginServiceHandler(context.Background(), authMux, grpcLocalClient)
 }

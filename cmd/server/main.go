@@ -1,6 +1,7 @@
 package main
 
 import (
+	"git.vfeda.com/vfedabackendteam/jimuhotupdate/internal/pkg/middlewares"
 	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -27,12 +28,22 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	gwMux := runtime.NewServeMux()
+	authMux := runtime.NewServeMux()
+
 	r := gin.Default()
+	r.Use(middlewares.RateLimitMiddleware())
 
-	s.Register(grpcServer, grpcClient, gwMux)
+	//TODO: refactor this func to make authMux be part of gwMux
+	s.Register(grpcServer, grpcClient, gwMux, authMux)
 
-	r.Any("/*any", gin.WrapH(gwMux))
+	authG := r.Group("/auth")
+	authG.Any("/*any", gin.WrapH(gwMux))
+
+	apiG := r.Group("/api")
+	apiG.Use(middlewares.JWTAuthMiddleware())
+	apiG.Any("/*any", gin.WrapH(gwMux))
 
 	err = r.Run(":1235")
 	if err != nil {
